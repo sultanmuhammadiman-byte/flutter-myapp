@@ -11,11 +11,11 @@ class WarungMaduraApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Warung Madura Digital',
       debugShowCheckedModeBanner: false,
+      title: 'Warung Madura Iman',
       theme: ThemeData(
         primarySwatch: Colors.red,
-        scaffoldBackgroundColor: const Color(0xFFF5F5F5),
+        scaffoldBackgroundColor: const Color(0xFFF8F9FA),
       ),
       home: const HomePage(),
     );

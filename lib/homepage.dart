@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'detailpage.dart';
 
@@ -11,17 +9,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // Saldo kas awal warung
-  double _saldoKas = 500;
+  // Saldo Kas Awal Warung Madura
+  int saldoKas = 0;
 
-  // Fungsi untuk memperbarui saldo kas (bisa bertambah atau berkurang)
-  void _updateSaldo(double nominal, bool isPenambahan) {
+  // Fungsi callback untuk mengurangi kas ketika transaksi berhasil
+  void kurangiKas(int jumlah) {
     setState(() {
-      if (isPenambahan) {
-        _saldoKas += nominal;
-      } else {
-        _saldoKas -= nominal;
-      }
+      saldoKas -= jumlah;
     });
   }
 
@@ -29,78 +23,79 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'WARUNG MADURA IMAN',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-        ),
-        backgroundColor: Colors.red.shade800,
+        title: const Text('Warung Madura 24 Jam'),
+        backgroundColor: Colors.redAccent,
         centerTitle: true,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Kartu Informasi Kas / Saldo
+            // Kartu Informasi Saldo Kas Warung
             Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.red.shade900,
-                borderRadius: BorderRadius.circular(12),
+                color: Colors.redAccent,
+                borderRadius: BorderRadius.circular(16),
                 boxShadow: const [
-                  BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(0, 3))
+                  BoxShadow(color: Colors.black26, blurRadius: 8, offset: Offset(0, 4)),
                 ],
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Buka Setiap Hari 24 Jam Kecuali Hari Kiamat', style: TextStyle(color: Colors.white70, fontSize: 12)),
-                  const SizedBox(height: 4),
-                  const Text('Pemasukan dan Pengeluaran Warung Muda Iman', style: TextStyle(color: Colors.white, fontSize: 14)),
+                  const Text(
+                    'PEMASUKKAN WARUNG MADURA',
+                    style: TextStyle(color: Colors.white70, fontSize: 14, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
                   Text(
-                    'Rp ${_saldoKas.toStringAsFixed(0).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
-                    style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                    'Rp ${saldoKas.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}',
+                    style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
             ),
             const SizedBox(height: 24),
-
             const Text(
-              'Layanan Utama',
+              'Pilih Layanan Transaksi',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
 
-            // Grid Menu Layanan
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+            // Grid Menu Transaksi
+            GridView.count(
+              crossAxisCount: 2,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
               children: [
-                _buildMenuItem(context, 'Sembako', Icons.shopping_basket, Colors.orange),
-                _buildMenuItem(context, 'Topup & Pulsa', Icons.phone_android, Colors.blue),
-                _buildMenuItem(context, 'Transfer', Icons.account_balance_wallet, Colors.green),
-                _buildMenuItem(context, 'Bensin', Icons.local_gas_station, Colors.red),
+                _buildMenuItem(
+                  context,
+                  title: 'Sembako',
+                  imageUrl: 'https://cdn-icons-png.flaticon.com/512/3082/3082011.png',
+                  type: 'sembako',
+                ),
+                _buildMenuItem(
+                  context,
+                  title: 'TopUp & Pulsa',
+                  imageUrl: 'https://cdn-icons-png.flaticon.com/512/3659/3659899.png',
+                  type: 'topup',
+                ),
+                _buildMenuItem(
+                  context,
+                  title: 'Transfer Uang',
+                  imageUrl: 'https://cdn-icons-png.flaticon.com/512/2845/2845944.png',
+                  type: 'transfer',
+                ),
+                _buildMenuItem(
+                  context,
+                  title: 'Bensin Eceran',
+                  imageUrl: 'https://cdn-icons-png.flaticon.com/512/2933/2933886.png',
+                  type: 'bensin',
+                ),
               ],
-            ),
-            const SizedBox(height: 24),
-
-            // Banner Info
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.orange.shade100,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Row(
-                children: [
-                  Icon(Icons.info_outline, color: Colors.orange),
-                  SizedBox(width: 8),
-                  Expanded(
-                    child: Text('Dapatkan promo menarik setiap hari! Jangan lewatkan kesempatan untuk berbelanja dengan harga terbaik di Warung Madura Iman.', style: TextStyle(color: Colors.orange, fontSize: 14)),
-                  ),
-                ],
-              ),
             ),
           ],
         ),
@@ -108,41 +103,41 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildMenuItem(BuildContext context, String title, IconData icon, Color color) {
+  // Widget Pembantu untuk Membuat Kartu Menu
+  Widget _buildMenuItem(BuildContext context, {required String title, required String imageUrl, required String type}) {
     return GestureDetector(
-      onTap: () async {
-        // Navigasi ke halaman detail dan menunggu hasil callback untuk update kas
-        final result = await Navigator.push(
+      onTap: () {
+        Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DetailPage(title: title, themeColor: color),
+            builder: (context) => DetailPage(
+              title: title,
+              type: type,
+              saldoKas: saldoKas,
+              onTransaksiBerhasil: kurangiKas,
+            ),
           ),
         );
-
-        // Jika ada data transaksi yang dikembalikan, update saldo kas
-        if (result != null && result is Map<String, dynamic>) {
-          double nominal = result['nominal'];
-          bool isPenambahan = result['isPenambahan'];
-          _updateSaldo(nominal, isPenambahan);
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(result['message'])),
-          );
-        }
       },
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.2),
-              shape: BoxShape.circle,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: const [
+            BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 2)),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.network(imageUrl, width: 64, height: 64, fit: BoxFit.contain),
+            const SizedBox(height: 12),
+            Text(
+              title,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
             ),
-            child: Icon(icon, size: 30, color: color),
-          ),
-          const SizedBox(height: 8),
-          Text(title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-        ],
+          ],
+        ),
       ),
     );
   }

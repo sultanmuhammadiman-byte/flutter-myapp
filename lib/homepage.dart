@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Warung Madura 24 Jam'),
+        title: const Text('Buka 24 Jam Full Non Stop Kecuali Hari Kiamat'),
         backgroundColor: Colors.redAccent,
         centerTitle: true,
       ),
